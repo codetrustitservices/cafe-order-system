@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Menu - Order Now</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+
+
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+        <a class="navbar-brand" href="/">☕ My Cafe</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <div class="navbar-nav">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link active" href="/menu">Menu</a>
+                <a class="nav-link" href="/">Admin</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <h2>🍽️ Our Menu</h2>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Left Column - Menu Items (70%) -->
+        <div class="col-lg-8">
+            <!-- Coffee Section -->
+            <div class="category-section">
+                <div class="category-header">
+                    <span class="category-icon">☕</span>
+                    <h3>Coffee</h3>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6" th:each="item : ${menuItems}" th:if="${item.category == 'Coffee'}">
+                        <div class="menu-card">
+                            <div class="menu-card-img-wrapper">
+                                <img th:src="${item.imageUrl}" class="menu-card-img" alt="Coffee">
+                            </div>
+                            <div class="menu-card-body">
+                                <h5 class="menu-card-title" th:text="${item.name}">Cappuccino</h5>
+                                <p class="menu-card-description" th:text="${item.description}">Rich and creamy coffee</p>
+                                <p class="menu-card-price">₹<span th:text="${item.price}">120</span></p>
+                                <button class="btn btn-add-cart w-100"
+                                        th:data-id="${item.id}"
+                                        th:data-name="${item.name}"
+                                        th:data-price="${item.price}"
+                                        onclick="addToCart(this)">
+                                    ➕ Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Snacks Section -->
+            <div class="category-section">
+                <div class="category-header">
+                    <span class="category-icon">🍟</span>
+                    <h3>Snacks</h3>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6" th:each="item : ${menuItems}" th:if="${item.category == 'Snacks'}">
+                        <div class="menu-card">
+                            <div class="menu-card-img-wrapper">
+                                <img th:src="${item.imageUrl}" class="menu-card-img" alt="Snack">
+                            </div>
+                            <div class="menu-card-body">
+                                <h5 class="menu-card-title" th:text="${item.name}">French Fries</h5>
+                                <p class="menu-card-description" th:text="${item.description}">Crispy and delicious</p>
+                                <p class="menu-card-price">₹<span th:text="${item.price}">80</span></p>
+                                <button class="btn btn-add-cart w-100"
+                                        th:data-id="${item.id}"
+                                        th:data-name="${item.name}"
+                                        th:data-price="${item.price}"
+                                        onclick="addToCart(this)">
+                                    ➕ Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meals Section -->
+            <div class="category-section">
+                <div class="category-header">
+                    <span class="category-icon">🍽️</span>
+                    <h3>Meals</h3>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6" th:each="item : ${menuItems}" th:if="${item.category == 'Meals'}">
+                        <div class="menu-card">
+                            <div class="menu-card-img-wrapper">
+                                <img th:src="${item.imageUrl}" class="menu-card-img" alt="Meal">
+                            </div>
+                            <div class="menu-card-body">
+                                <h5 class="menu-card-title" th:text="${item.name}">Chicken Burger</h5>
+                                <p class="menu-card-description" th:text="${item.description}">Juicy and filling</p>
+                                <p class="menu-card-price">₹<span th:text="${item.price}">200</span></p>
+                                <button class="btn btn-add-cart w-100"
+                                        th:data-id="${item.id}"
+                                        th:data-name="${item.name}"
+                                        th:data-price="${item.price}"
+                                        onclick="addToCart(this)">
+                                    ➕ Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Cart Sidebar (30%) -->
+        <div class="col-lg-4">
+            <div class="cart-sidebar">
+                <div class="cart-header">
+                    <h5>🛒 Your Order</h5>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </div>
+
+                <div id="cart-items">
+                    <div class="empty-cart">Your cart is empty</div>
+                </div>
+
+                <div class="cart-total">
+                    <p>Total: ₹<span id="cart-total">0</span></p>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button class="btn btn-checkout" onclick="checkout()" id="checkout-btn" disabled>
+                        📱 Order Now
+                    </button>
+                    <button class="btn btn-clear" onclick="clearCart()">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer Spacing -->
+<div style="height: 50px;"></div>
+
+<!-- CTA Section -->
+<div class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <div class="cta-text">
+                <h2 class="cta-title">Ready to Order?</h2>
+                <p class="cta-subtitle">Browse our full menu and place your order via WhatsApp</p>
+                <div class="cta-buttons">
+                    <a href="/menu" class="cta-btn-primary">View Full Menu</a>
+                    <a href="/menu" class="cta-btn-secondary">Order Now</a>
+                </div>
+            </div>
+            <div class="cta-image">☕</div>
+        </div>
+        <br>
+        <p>
+            This is a demo website created by <strong>CodeTrust IT Services</strong>.
+            You can contact us for a <strong>free demo</strong> and <strong>consultation support</strong>.
+        </p>
+
+        <p>
+            📧 Email:
+            <a href="mailto:codetrust.help@gmail.com">codetrust.help@gmail.com</a>
+        </p>
+
+        <p>
+            🔗 Connect with us:
+            <a href="https://www.linkedin.com/in/codetrust-it-services" target="_blank">LinkedIn</a> |
+            <a href="https://www.instagram.com/codetrust_it_services/" target="_blank">Instagram</a> |
+            <a href="https://github.com/codetrustitservices" target="_blank">GitHub</a>
+        </p>
+
+        <p>
+            © 2026 CodeTrust IT Services
+        </p>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let cart = [];
+
+    function addToCart(button) {
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        const price = parseFloat(button.getAttribute('data-price'));
+
+        // Check if item already in cart
+        const existing = cart.find(item => item.id === id);
+        if (existing) {
+            existing.quantity++;
+        } else {
+            cart.push({id, name, price, quantity: 1});
+        }
+
+        updateCart();
+    }
+
+    function updateCart() {
+        let cartHTML = '';
+        let total = 0;
+
+        if (cart.length === 0) {
+            cartHTML = '<div class="empty-cart">Your cart is empty</div>';
+            document.getElementById('checkout-btn').disabled = true;
+        } else {
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                cartHTML += `
+                    <div class="cart-item">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div style="flex: 1;">
+                                <strong style="display: block; margin-bottom: 4px;">${item.name}</strong>
+                                <span class="text-muted" style="font-size: 0.85rem;">Qty: ${item.quantity}</span>
+                            </div>
+                            <div class="text-end ms-2">
+                                <strong style="color: #FF6B35; font-size: 1rem; display: block; margin-bottom: 4px;">₹${itemTotal}</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1">
+                            <button class="btn-qty" onclick="decreaseQty(${index})">−</button>
+                            <button class="btn-qty" onclick="increaseQty(${index})">+</button>
+                            <button class="btn-remove" onclick="removeItem(${index})">×</button>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('checkout-btn').disabled = false;
+        }
+
+        document.getElementById('cart-items').innerHTML = cartHTML;
+        document.getElementById('cart-total').innerText = total;
+        document.getElementById('cart-count').innerText = cart.length;
+    }
+
+    function increaseQty(index) {
+        cart[index].quantity++;
+        updateCart();
+    }
+
+    function decreaseQty(index) {
+        if (cart[index].quantity > 1) {
+            cart[index].quantity--;
+        } else {
+            cart.splice(index, 1);
+        }
+        updateCart();
+    }
+
+    function removeItem(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
+
+    function clearCart() {
+        cart = [];
+        updateCart();
+    }
+
+    function checkout() {
+        if (cart.length === 0) {
+            alert('Your cart is empty!');
+            return;
+        }
+
+        let message = "🛒 *New Order from Cafe Website*\n\n";
+        let total = 0;
+
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            message += `${item.name} x ${item.quantity} = ₹${itemTotal}\n`;
+        });
+
+        message += `\n*Total: ₹${total}*\n\nPlease confirm my order!`;
+
+        // Replace with your WhatsApp number (with country code, no + or spaces)
+        const whatsappNumber = '918149328485';
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+        window.open(whatsappUrl, '_blank');
+    }
+
+    // Initialize empty cart display
+    updateCart();
+</script>
+
+</body>
+</html>
